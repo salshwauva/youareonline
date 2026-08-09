@@ -6,7 +6,7 @@ import LessonView from './components/LessonView';
 import BadgeModal from './components/BadgeModal';
 
 function MainApp() {
-  const { currentTrack, activeQuestId, setActiveQuest, newBadgeUnlocked, clearNewBadgeModal } = useGame();
+  const { activeQuestId, setActiveQuest, newBadgeUnlocked, clearNewBadgeModal } = useGame();
   const [view, setView] = useState('map'); // 'map', 'lesson'
 
   const handleSelectQuest = (questId) => {
@@ -15,7 +15,7 @@ function MainApp() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--pastel-sky)' }}>
       <Navbar currentView={view} setView={setView} />
       
       <main style={{ flex: 1 }}>
@@ -26,17 +26,28 @@ function MainApp() {
         )}
       </main>
 
-      {/* Footer */}
+      {/* Retro OS Desktop Footer */}
       <footer style={{
         padding: '16px',
         textAlign: 'center',
-        background: '#050608',
-        borderTop: '1px solid var(--card-border)',
-        fontSize: '0.75rem',
-        color: 'var(--text-muted)',
-        fontFamily: 'var(--font-retro)'
+        background: '#ffffff',
+        borderTop: '2px solid var(--border-dark)',
+        fontSize: '0.78rem',
+        color: 'var(--border-dark)',
+        fontWeight: 'bold',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4px'
       }}>
-        YOU ARE ONLINE © 2026 • GAMIFIED CS & AUTOMATED SYNTHETIC DATA LEARNING PLATFORM
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', color: '#7c8cc6' }}>
+          <span style={{ cursor: 'pointer' }}>Hello human!</span> •
+          <span style={{ cursor: 'pointer' }}>Positive vibes!</span> •
+          <span style={{ cursor: 'pointer' }}>Today is a great day!</span> •
+          <span style={{ cursor: 'pointer' }}>Don't forget to take a nap!</span>
+        </div>
+        <div>
+          YOU ARE ONLINE © 2000-2026 • PASTEL RETRO Y2K OS LEARNING PLATFORM
+        </div>
       </footer>
 
       {/* Badge Unlock Celebration Modal */}

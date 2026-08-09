@@ -1,147 +1,125 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { Volume2, VolumeX, Flame, Sparkles, Map, Heart, Star } from 'lucide-react';
+import { Volume2, VolumeX, Flame, Map, Star, Sparkles, Monitor, Folder, Check } from 'lucide-react';
 
-export default function Navbar({ onOpenMap, currentView, setView }) {
-  const { xp, level, currentXPInLevel, streak, soundMuted, toggleSound, resetProgress } = useGame();
+export default function Navbar({ currentView, setView }) {
+  const { xp, level, currentXPInLevel, streak, soundMuted, toggleSound } = useGame();
+
+  // Calculate 10 progress blocks
+  const filledBlocks = Math.floor((currentXPInLevel / 100) * 10);
 
   return (
-    <header style={{
-      background: 'rgba(255, 245, 248, 0.92)',
-      backdropFilter: 'blur(12px)',
-      borderBottom: '2px solid var(--card-border)',
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      padding: '12px 24px',
-      boxShadow: '0 4px 15px rgba(244, 114, 182, 0.1)'
-    }}>
-      <div style={{
-        maxWidth: '1300px',
-        margin: '0 auto',
-        display: 'flex',
-        justify: 'space-between',
-        alignItems: 'center'
-      }}>
-        {/* Logo */}
-        <div 
-          onClick={() => setView('map')}
-          style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
-        >
-          <div style={{
-            background: 'linear-gradient(135deg, #ff69b4, #c084fc)',
-            width: '38px',
-            height: '38px',
-            borderRadius: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 0 15px rgba(255, 105, 180, 0.4)',
-            fontSize: '1.3rem'
-          }}>
-            🌸
+    <header style={{ display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, zIndex: 100, padding: '12px 20px 0 20px' }}>
+      <div className="retro-window" style={{ maxWidth: '1300px', margin: '0 auto', width: '100%' }}>
+        
+        {/* Retro Window Titlebar */}
+        <div className="retro-titlebar">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Monitor size={16} />
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              YOU ARE ONLINE <span className="status-light-green" title="Status: Online & Operational" /> • Y2K DESKTOP OS [V2.0]
+            </span>
           </div>
-          <div>
-            <h1 style={{ fontSize: '1.05rem', color: 'var(--text-main)', margin: 0, letterSpacing: '-0.5px' }}>
-              YOU ARE <span style={{ color: 'var(--accent-pink-deep)' }}>ONLINE</span> 💕
-            </h1>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontFamily: 'var(--font-retro)' }}>
-              KAWAII CS & PROGRAMMING QUESTS
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <span style={{ fontSize: '0.78rem', color: '#fbcfe8', fontWeight: 'bold' }}>Positive vibes! ✦</span>
+            <div className="retro-controls">
+              <span className="retro-win-box">_</span>
+              <span className="retro-win-box">▢</span>
+              <span className="retro-win-box">✕</span>
             </div>
           </div>
         </div>
 
-        {/* Navigation Mode */}
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button 
-            onClick={() => setView('map')} 
-            className={`pixel-btn ${currentView === 'map' ? 'pixel-btn-primary' : 'pixel-btn-secondary'}`}
-            style={{ fontSize: '0.75rem', padding: '6px 14px' }}
-          >
-            <Map size={14} /> Quest Map 🌸
-          </button>
-          <button 
-            onClick={() => setView('lesson')} 
-            className={`pixel-btn ${currentView === 'lesson' ? 'pixel-btn-primary' : 'pixel-btn-secondary'}`}
-            style={{ fontSize: '0.75rem', padding: '6px 14px' }}
-          >
-            <Sparkles size={14} /> Active Quest
-          </button>
-        </div>
-
-        {/* Player Telemetry & Stats */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
+        {/* Main Navbar Bar */}
+        <div style={{
+          padding: '12px 20px',
+          background: '#ffffff',
+          display: 'flex',
+          justify: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}>
           
-          {/* Level Progress */}
-          <div style={{ display: 'flex', flexDirection: 'column', width: '130px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', fontFamily: 'var(--font-retro)', color: '#be185d', fontWeight: 700 }}>
-              <span>LVL {level}</span>
-              <span>{currentXPInLevel}/100 XP</span>
-            </div>
-            <div style={{ background: '#fce7f3', height: '10px', borderRadius: '5px', marginTop: '4px', overflow: 'hidden', border: '1px solid #fbcfe8' }}>
-              <div style={{
-                background: 'linear-gradient(90deg, #ff85a1, #ec4899)',
-                height: '100%',
-                width: `${currentXPInLevel}%`,
-                transition: 'width 0.3s ease'
-              }} />
-            </div>
-          </div>
-
-          {/* Daily Streak */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            background: '#fff1f2',
-            border: '1.5px solid #fda4af',
-            padding: '4px 10px',
-            borderRadius: '6px',
-            color: '#e11d48',
-            fontSize: '0.8rem',
-            fontFamily: 'var(--font-retro)',
-            fontWeight: 700
-          }}>
-            <Flame size={16} fill="#f43f5e" />
-            <span>{streak} DAY STREAK</span>
-          </div>
-
-          {/* Total XP Badge */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            background: '#f3e8ff',
-            border: '1.5px solid #d8b4fe',
-            padding: '4px 10px',
-            borderRadius: '6px',
-            color: '#7e22ce',
-            fontSize: '0.8rem',
-            fontFamily: 'var(--font-retro)',
-            fontWeight: 700
-          }}>
-            <Star size={16} fill="#a855f7" />
-            <span>{xp} XP</span>
-          </div>
-
-          {/* Sound Toggle */}
-          <button 
-            onClick={toggleSound}
-            style={{
-              background: '#fce7f3',
-              border: '1px solid #fbcfe8',
-              color: soundMuted ? 'var(--text-muted)' : 'var(--accent-pink-deep)',
-              padding: '6px 10px',
-              borderRadius: '8px',
-              cursor: 'pointer',
+          {/* Logo & Branding */}
+          <div 
+            onClick={() => setView('map')}
+            style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
+          >
+            <div className="aura-gradient-box" style={{
+              width: '40px',
+              height: '40px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            title={soundMuted ? "Unmute Retro Audio" : "Mute Retro Audio"}
-          >
-            {soundMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-          </button>
+              justifyContent: 'center',
+              fontSize: '1.4rem'
+            }}>
+              ✨
+            </div>
+            <div>
+              <h1 style={{ fontSize: '1.25rem', color: '#222638', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                YOU ARE ONLINE <span className="status-light-green" title="System Status: Online" /> <span className="sparkle-star">✦</span>
+              </h1>
+            </div>
+          </div>
+
+          {/* Navigation View Buttons */}
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button 
+              onClick={() => setView('map')} 
+              className={`retro-btn ${currentView === 'map' ? 'retro-btn-pink' : ''}`}
+            >
+              <Folder size={14} /> Desktop Map
+            </button>
+            <button 
+              onClick={() => setView('lesson')} 
+              className={`retro-btn ${currentView === 'lesson' ? 'retro-btn-blue' : ''}`}
+            >
+              <Sparkles size={14} /> Active Quest
+            </button>
+          </div>
+
+          {/* Level Progress & Telemetry Stats */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            
+            {/* Retro Loading Meter Bar */}
+            <div style={{ display: 'flex', flexDirection: 'column', width: '140px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#222638', fontWeight: 'bold' }}>
+                <span>LVL {level}</span>
+                <span>{currentXPInLevel}/100 XP</span>
+              </div>
+              <div className="retro-progress-container" style={{ marginTop: '2px' }}>
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <span 
+                    key={i} 
+                    className={i < filledBlocks ? 'retro-progress-block' : 'retro-progress-block-empty'} 
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Streak Pill */}
+            <span className="retro-pill-btn retro-pill-btn-blue">
+              <Flame size={14} fill="#ffffff" /> {streak} STREAK
+            </span>
+
+            {/* XP Pill */}
+            <span className="retro-pill-btn">
+              <Star size={14} fill="#ffffff" /> {xp} XP
+            </span>
+
+            {/* Audio Toggle */}
+            <button 
+              onClick={toggleSound}
+              className="retro-btn"
+              style={{ padding: '6px 10px' }}
+              title={soundMuted ? "Unmute Retro Audio" : "Mute Retro Audio"}
+            >
+              {soundMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+            </button>
+
+          </div>
+
         </div>
       </div>
     </header>

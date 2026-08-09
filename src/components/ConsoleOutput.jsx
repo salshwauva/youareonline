@@ -1,38 +1,29 @@
 import React from 'react';
-import { Terminal, CheckCircle2, XCircle, Clock, Sparkles } from 'lucide-react';
+import { Terminal, CheckCircle2, XCircle, Clock, Activity } from 'lucide-react';
 
 export default function ConsoleOutput({ output, testResults, isRunning, executionTime }) {
   const allTestsPassed = testResults && testResults.length > 0 && testResults.every(t => t.passed);
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-      background: '#fff0f5',
-      border: '2px solid #fbcfe8',
-      borderRadius: '12px',
-      overflow: 'hidden',
-      boxShadow: '0 4px 15px rgba(251, 207, 232, 0.2)'
-    }}>
-      {/* Console Header */}
-      <div style={{
-        display: 'flex',
-        justify: 'space-between',
-        alignItems: 'center',
-        padding: '10px 16px',
-        background: '#fce7f3',
-        borderBottom: '1.5px solid #fbcfe8'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#be185d', fontFamily: 'var(--font-retro)', fontWeight: 700 }}>
-          <Terminal size={16} /> TEST HARNESS CONSOLE 🎀
+    <div className="retro-window" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      {/* Console Header Bar */}
+      <div className="retro-titlebar retro-titlebar-yellow">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem' }}>
+          <Terminal size={16} /> Console Output & Test Harness
         </div>
         
-        {executionTime !== null && (
-          <div style={{ fontSize: '0.7rem', color: '#9d4b6e', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
-            <Clock size={12} /> {executionTime}ms
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {executionTime !== null && (
+            <div style={{ fontSize: '0.72rem', color: '#222638', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}>
+              <Clock size={12} /> {executionTime}ms
+            </div>
+          )}
+          <div className="retro-controls">
+            <span className="retro-win-box">_</span>
+            <span className="retro-win-box">▢</span>
+            <span className="retro-win-box">✕</span>
           </div>
-        )}
+        </div>
       </div>
 
       {/* Output Console Log */}
@@ -44,19 +35,20 @@ export default function ConsoleOutput({ output, testResults, isRunning, executio
         overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        gap: '12px'
+        gap: '12px',
+        background: '#222638'
       }}>
         {isRunning ? (
-          <div style={{ color: '#be185d', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
-            <Sparkles size={16} className="animate-spin" /> Compiling & running test harness against synthetic data... ✨
+          <div style={{ color: '#fbcfe8', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
+            <Activity size={16} className="animate-spin" /> Running test harness...
           </div>
         ) : (
           <>
             {/* Standard Output */}
             {output && (
               <div>
-                <div style={{ color: '#9d4b6e', fontSize: '0.7rem', marginBottom: '4px', fontWeight: 600 }}>// STDOUT LOGS</div>
-                <pre style={{ color: '#831843', background: '#ffffff', padding: '10px', borderRadius: '8px', border: '1px solid #fbcfe8', margin: 0, whiteSpace: 'pre-wrap' }}>
+                <div style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: '4px', fontWeight: 'bold' }}>// STDOUT LOGS</div>
+                <pre style={{ color: '#a7f3d0', background: '#1a1d2b', padding: '10px', borderRadius: '4px', border: '1px solid #33394f', margin: 0, whiteSpace: 'pre-wrap' }}>
                   {output}
                 </pre>
               </div>
@@ -65,7 +57,7 @@ export default function ConsoleOutput({ output, testResults, isRunning, executio
             {/* Test Results */}
             {testResults && testResults.length > 0 && (
               <div>
-                <div style={{ color: '#9d4b6e', fontSize: '0.7rem', marginBottom: '6px', fontWeight: 600 }}>// ASSERTION TEST RESULTS</div>
+                <div style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: '6px', fontWeight: 'bold' }}>// ASSERTION TEST RESULTS</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {testResults.map((test, i) => (
                     <div key={i} style={{
@@ -73,14 +65,14 @@ export default function ConsoleOutput({ output, testResults, isRunning, executio
                       alignItems: 'center',
                       gap: '8px',
                       padding: '8px 12px',
-                      background: test.passed ? '#ecfdf5' : '#fff1f2',
-                      border: `1.5px solid ${test.passed ? '#10b981' : '#f43f5e'}`,
-                      borderRadius: '8px',
+                      background: test.passed ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                      border: `1.5px solid ${test.passed ? '#22c55e' : '#ef4444'}`,
+                      borderRadius: '4px',
                       fontSize: '0.8rem',
-                      fontWeight: 600
+                      fontWeight: 'bold'
                     }}>
-                      {test.passed ? <CheckCircle2 size={16} color="#10b981" /> : <XCircle size={16} color="#f43f5e" />}
-                      <span style={{ color: test.passed ? '#065f46' : '#9f1239' }}>
+                      {test.passed ? <CheckCircle2 size={16} color="#22c55e" /> : <XCircle size={16} color="#ef4444" />}
+                      <span style={{ color: test.passed ? '#4ade80' : '#f87171' }}>
                         {test.name}
                       </span>
                     </div>
@@ -93,15 +85,16 @@ export default function ConsoleOutput({ output, testResults, isRunning, executio
               <div style={{
                 marginTop: '8px',
                 padding: '12px',
-                background: 'linear-gradient(135deg, #fce7f3, #f3e8ff)',
-                border: '2px solid #f472b6',
-                borderRadius: '8px',
+                background: '#fbcfe8',
+                border: '2px solid #222638',
+                borderRadius: '4px',
                 textAlign: 'center',
-                fontFamily: 'var(--font-retro)',
-                color: '#be185d',
-                fontSize: '0.85rem'
+                color: '#222638',
+                fontSize: '0.9rem',
+                fontWeight: 'bold',
+                boxShadow: '2px 2px 0px #222638'
               }}>
-                🎉 QUEST PASSED! +XP EARNED! 🌸
+                🎉 QUEST PASSED! +XP EARNED & BADGE UNLOCKED! ✨
               </div>
             )}
           </>

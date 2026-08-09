@@ -1,124 +1,281 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TRACKS_DATA } from '../data/coursesData';
 import { useGame } from '../context/GameContext';
-import { CheckCircle2, Play, Award, Sparkles, Heart } from 'lucide-react';
+import { CheckCircle2, Play, Award, Folder, Monitor, Sparkles, Heart, Smile, Code } from 'lucide-react';
+
+const LANGUAGES = [
+  { id: 'ALL', name: 'ALL COURSES', icon: '✨' },
+  { id: 'Rust', name: 'RUST', icon: '🦀' },
+  { id: 'Python', name: 'PYTHON', icon: '🐍' },
+  { id: 'SQL', name: 'SQL', icon: '💾' },
+  { id: 'Java', name: 'JAVA', icon: '☕' },
+  { id: 'C++', name: 'C++', icon: '⚡' },
+  { id: 'C#', name: 'C#', icon: '🎯' },
+  { id: 'C', name: 'C', icon: '⚙️' }
+];
 
 export default function TrackMap({ onSelectQuest }) {
-  const { completedQuests, unlockedBadges, activeQuestId } = useGame();
+  const { completedQuests, unlockedBadges, activeQuestId, xp, level, streak } = useGame();
+  const [selectedLanguage, setSelectedLanguage] = useState('ALL');
+
+  const filteredTracks = selectedLanguage === 'ALL'
+    ? TRACKS_DATA
+    : TRACKS_DATA.filter(track => track.languages.includes(selectedLanguage));
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 20px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       
-      {/* Anime Sakura Banner */}
-      <div className="pixel-box" style={{
-        padding: '32px',
-        background: 'linear-gradient(135deg, #fff0f6 0%, #f4e8ff 100%)',
-        borderColor: '#fbcfe8',
-        display: 'flex',
-        justify: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '20px'
-      }}>
-        <div style={{ maxWidth: '650px' }}>
-          <div className="badge-neon badge-pink" style={{ marginBottom: '12px' }}>
-            <Sparkles size={12} /> 🌸 KAWAII QUEST MAP 🎀
+      {/* Hero Section: Desktop Workspace with CRT Monitor & Note Dialogs */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', alignItems: 'stretch' }}>
+        
+        {/* CRT Monitor Component: "Hello human!" */}
+        <div className="retro-window" style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="retro-titlebar">
+            <span>CRT Monitor • System Output</span>
+            <div className="retro-controls">
+              <span className="retro-win-box">_</span>
+              <span className="retro-win-box">▢</span>
+              <span className="retro-win-box">✕</span>
+            </div>
           </div>
-          <h2 style={{ fontSize: '1.6rem', color: '#4a0e2e', marginBottom: '8px' }}>
-            SELECT YOUR PROGRAMMING & CS JOURNEY 💕
-          </h2>
-          <p style={{ color: '#9d4b6e', fontSize: '0.95rem' }}>
-            Learn Rust Ownership, C++ Pointers, SQL Databases, Data Science, and Systems Architecture with automated synthetic data generators!
-          </p>
+          
+          <div style={{ padding: '24px', background: '#f8fafc', display: 'flex', alignItems: 'center', gap: '20px', flex: 1 }}>
+            {/* CRT Monitor Illustration Frame */}
+            <div style={{
+              width: '130px',
+              height: '110px',
+              background: '#7c8cc6',
+              border: '2px solid #222638',
+              borderRadius: '8px',
+              padding: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              boxShadow: '3px 3px 0px #222638'
+            }}>
+              <div className="aura-gradient-box" style={{
+                width: '100%',
+                height: '75px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                padding: '6px',
+                fontWeight: 'bold',
+                fontSize: '0.85rem',
+                color: '#ffffff',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.4)'
+              }}>
+                Hello human!
+              </div>
+              <div style={{ width: '30px', height: '4px', background: '#222638', marginTop: '6px', borderRadius: '2px' }} />
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#222638', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                Welcome to CS Desktop <span className="sparkle-star">✦</span>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: '#4b5563', lineHeight: 1.4, marginBottom: '12px' }}>
+                Select a programming language filter or quest folder below to master Rust, Python, SQL, Java, C++, C#, and C!
+              </p>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                <span className="retro-pill-btn retro-pill-btn-blue" style={{ fontSize: '0.72rem' }}>
+                  <Smile size={12} /> Positive vibes!
+                </span>
+                <span className="retro-pill-btn" style={{ fontSize: '0.72rem' }}>
+                  Level {level} Engineer
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Badges Inventory Summary */}
-        <div style={{ background: '#ffffff', padding: '16px 20px', borderRadius: '12px', border: '1.5px solid #fbcfe8', boxShadow: '0 4px 15px rgba(244, 114, 182, 0.15)' }}>
-          <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-retro)', color: '#be185d', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}>
-            <Award size={16} /> EARNED BADGES ({unlockedBadges.length}) ✨
+        {/* Note Dialog Box: "Don't forget to take a nap!" */}
+        <div className="retro-window" style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="retro-titlebar retro-titlebar-pink">
+            <span>Note</span>
+            <div className="retro-controls">
+              <span className="retro-win-box">_</span>
+              <span className="retro-win-box">▢</span>
+              <span className="retro-win-box">✕</span>
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {unlockedBadges.map((b) => (
-              <span key={b.id} title={`${b.title}: ${b.desc}`} style={{ fontSize: '1.3rem', padding: '4px 8px', background: '#fff0f6', borderRadius: '6px', border: '1px solid #fbcfe8' }}>
-                {b.icon}
-              </span>
-            ))}
+
+          <div style={{ padding: '20px', background: '#ffffff', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#222638', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                Today is a great day! <span className="sparkle-star">✨</span>
+              </div>
+              <p style={{ fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.5 }}>
+                "Don't forget to take a nap, drink water, and write clean algorithm test harnesses!"
+              </p>
+            </div>
+
+            {/* Dialog buttons: [ thanks ] [ later ] */}
+            <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+              <button className="retro-btn retro-btn-pink">thanks</button>
+              <button className="retro-btn">later</button>
+            </div>
           </div>
+        </div>
+
+        {/* Earned Badges Inventory Window */}
+        <div className="retro-window" style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="retro-titlebar retro-titlebar-yellow">
+            <span>Memories • Badges Inventory ({unlockedBadges.length})</span>
+            <div className="retro-controls">
+              <span className="retro-win-box">_</span>
+              <span className="retro-win-box">▢</span>
+              <span className="retro-win-box">✕</span>
+            </div>
+          </div>
+
+          <div style={{ padding: '16px', background: '#ffffff', flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#222638', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Award size={16} color="#f7a3c3" /> UNLOCKED DESKTOP BADGES
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', flex: 1, alignContent: 'flex-start' }}>
+              {unlockedBadges.map((b) => (
+                <div 
+                  key={b.id} 
+                  title={`${b.title}: ${b.desc}`} 
+                  style={{
+                    padding: '8px 12px',
+                    background: '#eef3fc',
+                    border: '2px solid #222638',
+                    borderRadius: '4px',
+                    boxShadow: '2px 2px 0px #222638',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '0.82rem',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  <span>{b.icon}</span>
+                  <span>{b.title}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Language Selection Filter Bar (Y2K Desktop Control Box) */}
+      <div className="retro-window" style={{ padding: '14px 18px', background: '#ffffff' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', fontSize: '0.88rem', fontWeight: 'bold', color: '#222638' }}>
+          <Code size={18} color="#7c8cc6" />
+          <span>FILTER COURSES BY LANGUAGE:</span>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {LANGUAGES.map((lang) => {
+            const isSelected = selectedLanguage === lang.id;
+            return (
+              <button
+                key={lang.id}
+                onClick={() => setSelectedLanguage(lang.id)}
+                className={`retro-btn ${isSelected ? 'retro-btn-pink' : ''}`}
+                style={{
+                  padding: '6px 14px',
+                  fontSize: '0.8rem',
+                  borderColor: isSelected ? '#222638' : '#222638'
+                }}
+              >
+                <span>{lang.icon}</span>
+                <span>{lang.name}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Track Cards Grid */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-        {TRACKS_DATA.map((track) => {
+      {/* Track Windows Grid */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        {filteredTracks.map((track, trackIdx) => {
           const trackCompletedCount = track.quests.filter(q => completedQuests.includes(q.id)).length;
+          
+          // Alternate titlebar colors like in the reference images: blue, pink, yellow
+          const titlebarClass = trackIdx % 3 === 1 ? 'retro-titlebar-pink' : trackIdx % 3 === 2 ? 'retro-titlebar-yellow' : '';
 
           return (
-            <div key={track.id} className="pixel-box" style={{ padding: '24px', background: '#ffffff' }}>
+            <div key={track.id} className="retro-window">
               
-              {/* Track Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '16px', borderBottom: '1.5px solid #fbcfe8' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                  <span style={{ fontSize: '2.2rem' }}>{track.icon}</span>
-                  <div>
-                    <h3 style={{ fontSize: '1.25rem', color: '#4a0e2e' }}>{track.title}</h3>
-                    <p style={{ fontSize: '0.88rem', color: '#9d4b6e' }}>{track.description}</p>
-                  </div>
+              {/* Window Titlebar */}
+              <div className={`retro-titlebar ${titlebarClass}`}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Folder size={16} />
+                  <span>Folder: {track.title}</span>
                 </div>
-
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <span className="badge-neon badge-pink">
-                    {trackCompletedCount} / {track.quests.length} COMPLETED 🌸
+                  <span style={{ fontSize: '0.78rem', fontWeight: 'bold' }}>
+                    {trackCompletedCount} / {track.quests.length} Completed
                   </span>
+                  <div className="retro-controls">
+                    <span className="retro-win-box">_</span>
+                    <span className="retro-win-box">▢</span>
+                    <span className="retro-win-box">✕</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Quest Nodes */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>
-                {track.quests.map((quest, index) => {
-                  const isCompleted = completedQuests.includes(quest.id);
-                  const isActive = activeQuestId === quest.id;
+              {/* Window Content */}
+              <div style={{ padding: '20px', background: '#ffffff' }}>
+                <p style={{ fontSize: '0.88rem', color: '#4b5563', marginBottom: '16px' }}>
+                  {track.description}
+                </p>
 
-                  return (
-                    <div
-                      key={quest.id}
-                      onClick={() => onSelectQuest(quest.id)}
-                      className="pixel-box pixel-box-interactive"
-                      style={{
-                        padding: '16px',
-                        background: isActive ? '#fff0f6' : '#fffafd',
-                        borderColor: isActive ? 'var(--accent-pink-deep)' : isCompleted ? 'var(--accent-green)' : '#fbcfe8'
-                      }}
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
-                        <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-retro)', color: '#be185d', fontWeight: 700 }}>
-                          QUEST #{index + 1} • {quest.xp} XP 💖
-                        </span>
-                        {isCompleted ? (
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--accent-green)', fontSize: '0.75rem', fontWeight: 700 }}>
-                            <CheckCircle2 size={16} /> PASSED
+                {/* Quest Cards Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(330px, 1fr))', gap: '16px' }}>
+                  {track.quests.map((quest, index) => {
+                    const isCompleted = completedQuests.includes(quest.id);
+                    const isActive = activeQuestId === quest.id;
+
+                    return (
+                      <div
+                        key={quest.id}
+                        onClick={() => onSelectQuest(quest.id)}
+                        className="retro-window retro-window-interactive"
+                        style={{
+                          padding: '16px',
+                          background: isActive ? '#eef3fc' : '#ffffff',
+                          borderColor: isActive ? '#7c8cc6' : isCompleted ? '#22c55e' : '#222638'
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#7c8cc6' }}>
+                            QUEST #{index + 1} • {quest.xp} XP
                           </span>
-                        ) : (
-                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                            {quest.difficulty}
+                          {isCompleted ? (
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#16a34a', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                              <CheckCircle2 size={16} /> PASSED
+                            </span>
+                          ) : (
+                            <span style={{ fontSize: '0.72rem', color: '#6b7280', fontWeight: 'bold' }}>
+                              {quest.difficulty}
+                            </span>
+                          )}
+                        </div>
+
+                        <h4 style={{ fontSize: '0.95rem', color: '#222638', marginBottom: '6px' }}>
+                          {quest.title}
+                        </h4>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px' }}>
+                          <span style={{ fontSize: '0.75rem', color: '#6b7280', fontFamily: 'var(--font-code)' }}>
+                            {quest.simulatorType}
                           </span>
-                        )}
+                          <button className="retro-btn retro-btn-blue" style={{ padding: '4px 10px', fontSize: '0.75rem' }}>
+                            <Play size={12} /> Launch Quest
+                          </button>
+                        </div>
                       </div>
+                    );
+                  })}
+                </div>
 
-                      <h4 style={{ fontSize: '0.95rem', color: '#4a0e2e', marginBottom: '8px' }}>
-                        {quest.title}
-                      </h4>
-
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px' }}>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                          {quest.simulatorType}
-                        </span>
-                        <button className="pixel-btn pixel-btn-primary" style={{ padding: '5px 12px', fontSize: '0.72rem' }}>
-                          <Play size={12} /> Launch Quest 💕
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
               </div>
 
             </div>
