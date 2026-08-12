@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useGame } from '../context/GameContext';
-import { Volume2, VolumeX, Flame, Map, Star, Sparkles, Monitor, Folder, Check } from 'lucide-react';
+import { Volume2, VolumeX, Flame, Star, Sparkles, Monitor, Folder, Wrench, Compass } from 'lucide-react';
 
 export default function Navbar({ currentView, setView }) {
   const { xp, level, currentXPInLevel, streak, soundMuted, toggleSound } = useGame();
@@ -17,11 +17,10 @@ export default function Navbar({ currentView, setView }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Monitor size={16} />
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              YOU ARE ONLINE <span className="status-light-green" title="Status: Online & Operational" /> • Y2K DESKTOP OS [V2.0]
+              YOU ARE ONLINE <span className="status-light-green" title="Status: Online & Operational" />
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span style={{ fontSize: '0.78rem', color: '#fbcfe8', fontWeight: 'bold' }}>Positive vibes! ✦</span>
             <div className="retro-controls">
               <span className="retro-win-box">_</span>
               <span className="retro-win-box">▢</span>
@@ -69,13 +68,29 @@ export default function Navbar({ currentView, setView }) {
               onClick={() => setView('map')} 
               className={`retro-btn ${currentView === 'map' ? 'retro-btn-pink' : ''}`}
             >
-              <Folder size={14} /> Desktop Map
+              <Folder size={14} /> Course Catalog
             </button>
+
+            <button 
+              onClick={() => setView('roadmaps')} 
+              className={`retro-btn ${currentView === 'roadmaps' ? 'retro-btn-yellow' : ''}`}
+            >
+              <Compass size={14} /> Career Roadmaps
+            </button>
+
             <button 
               onClick={() => setView('lesson')} 
               className={`retro-btn ${currentView === 'lesson' ? 'retro-btn-blue' : ''}`}
             >
               <Sparkles size={14} /> Active Quest
+            </button>
+
+            <button 
+              onClick={() => setView('studio')} 
+              className={`retro-btn ${currentView === 'studio' ? 'retro-btn-pink' : ''}`}
+              title="Launch Lesson Authoring Studio"
+            >
+              <Wrench size={14} /> Lesson Studio
             </button>
           </div>
 

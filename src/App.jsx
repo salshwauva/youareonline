@@ -2,12 +2,21 @@ import React, { useState } from 'react';
 import { GameProvider, useGame } from './context/GameContext';
 import Navbar from './components/Navbar';
 import TrackMap from './components/TrackMap';
+import CourseJourneyView from './components/CourseJourneyView';
 import LessonView from './components/LessonView';
+import LessonAuthorStudio from './components/LessonAuthorStudio';
+import RoadmapsView from './components/RoadmapsView';
 import BadgeModal from './components/BadgeModal';
 
 function MainApp() {
   const { activeQuestId, setActiveQuest, newBadgeUnlocked, clearNewBadgeModal } = useGame();
-  const [view, setView] = useState('map'); // 'map', 'lesson'
+  const [view, setView] = useState('map'); // 'map' | 'roadmaps' | 'journey' | 'lesson' | 'studio'
+  const [selectedCourseId, setSelectedCourseId] = useState('javascript-course');
+
+  const handleSelectCourse = (courseId) => {
+    setSelectedCourseId(courseId);
+    setView('journey');
+  };
 
   const handleSelectQuest = (questId) => {
     setActiveQuest(questId);
@@ -20,13 +29,30 @@ function MainApp() {
       
       <main style={{ flex: 1 }}>
         {view === 'map' ? (
-          <TrackMap onSelectQuest={handleSelectQuest} />
+          <TrackMap onSelectCourse={handleSelectCourse} onSelectQuest={handleSelectQuest} />
+        ) : view === 'roadmaps' ? (
+          <RoadmapsView
+            onSelectQuest={handleSelectQuest}
+            onSelectCourse={handleSelectCourse}
+          />
+        ) : view === 'journey' ? (
+          <CourseJourneyView
+            courseId={selectedCourseId}
+            onSelectLesson={handleSelectQuest}
+            onBackToCatalog={() => setView('map')}
+          />
+        ) : view === 'studio' ? (
+          <LessonAuthorStudio onBackToCatalog={() => setView('map')} />
         ) : (
-          <LessonView questId={activeQuestId} onBackToMap={() => setView('map')} />
+          <LessonView
+            questId={activeQuestId}
+            onBackToMap={() => setView('journey')}
+            onNavigateLesson={handleSelectQuest}
+          />
         )}
       </main>
 
-      {/* Retro OS Desktop Footer */}
+      {/* Desktop Footer */}
       <footer style={{
         padding: '16px',
         textAlign: 'center',
@@ -39,14 +65,8 @@ function MainApp() {
         flexDirection: 'column',
         gap: '4px'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', color: '#7c8cc6' }}>
-          <span style={{ cursor: 'pointer' }}>Hello human!</span> •
-          <span style={{ cursor: 'pointer' }}>Positive vibes!</span> •
-          <span style={{ cursor: 'pointer' }}>Today is a great day!</span> •
-          <span style={{ cursor: 'pointer' }}>Don't forget to take a nap!</span>
-        </div>
         <div>
-          YOU ARE ONLINE © 2000-2026 • PASTEL RETRO Y2K OS LEARNING PLATFORM
+          YOU ARE ONLINE © 2026
         </div>
       </footer>
 

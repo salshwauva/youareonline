@@ -1,283 +1,321 @@
 import React, { useState } from 'react';
-import { TRACKS_DATA } from '../data/coursesData';
+import { ALL_COURSES, DOMAINS, searchLessons } from '../data/courseRegistry';
 import { useGame } from '../context/GameContext';
-import { CheckCircle2, Play, Award, Folder, Monitor, Sparkles, Heart, Smile, Code } from 'lucide-react';
+import { CheckCircle2, Play, Award, Folder, Code, Zap, Flame, Star, Search, Compass, BookOpen, Layers } from 'lucide-react';
 
 const LANGUAGES = [
-  { id: 'ALL', name: 'ALL COURSES', icon: '✨' },
-  { id: 'Rust', name: 'RUST', icon: '🦀' },
+  { id: 'ALL', name: 'ALL LANGUAGES', icon: '✨' },
+  { id: 'JavaScript', name: 'JAVASCRIPT', icon: '⚡' },
   { id: 'Python', name: 'PYTHON', icon: '🐍' },
+  { id: 'Next.js', name: 'NEXT.JS', icon: '▲' },
+  { id: 'Vue', name: 'VUE', icon: '🟢' },
+  { id: 'Svelte', name: 'SVELTE', icon: '🟠' },
+  { id: 'Node/Express', name: 'EXPRESS', icon: '🟢' },
+  { id: 'Python/FastAPI', name: 'FASTAPI', icon: '⚡' },
+  { id: 'Python/Pandas', name: 'PANDAS', icon: '🐼' },
+  { id: 'CSS/Tailwind', name: 'TAILWIND', icon: '🎨' },
+  { id: 'TypeScript', name: 'TYPESCRIPT', icon: '🔷' },
+  { id: 'Python/PyTorch', name: 'PYTORCH', icon: '🔥' },
+  { id: 'HTML/CSS', name: 'HTML/CSS', icon: '🎨' },
+  { id: 'Rust', name: 'RUST', icon: '🦀' },
   { id: 'SQL', name: 'SQL', icon: '💾' },
-  { id: 'Java', name: 'JAVA', icon: '☕' },
   { id: 'C++', name: 'C++', icon: '⚡' },
-  { id: 'C#', name: 'C#', icon: '🎯' },
-  { id: 'C', name: 'C', icon: '⚙️' }
+  { id: 'React', name: 'REACT', icon: '⚛️' },
+  { id: 'Terminal & Git', name: 'GIT / CLI', icon: '🖥️' }
 ];
 
-export default function TrackMap({ onSelectQuest }) {
-  const { completedQuests, unlockedBadges, activeQuestId, xp, level, streak } = useGame();
+export default function TrackMap({ onSelectCourse, onSelectQuest }) {
+  const { completedQuests, unlockedBadges, xp, level, streak } = useGame();
   const [selectedLanguage, setSelectedLanguage] = useState('ALL');
+  const [selectedDomain, setSelectedDomain] = useState('ALL DOMAINS');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredTracks = selectedLanguage === 'ALL'
-    ? TRACKS_DATA
-    : TRACKS_DATA.filter(track => track.languages.includes(selectedLanguage));
+  const searchResults = searchQuery ? searchLessons(searchQuery) : [];
+
+  const filteredCourses = ALL_COURSES.filter(course => {
+    const matchLang = selectedLanguage === 'ALL' || course.language === selectedLanguage;
+    const matchDomain = selectedDomain === 'ALL DOMAINS' || course.domain === selectedDomain;
+    return matchLang && matchDomain;
+  });
 
   return (
-    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
       
-      {/* Hero Section: Desktop Workspace with CRT Monitor & Note Dialogs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', alignItems: 'stretch' }}>
-        
-        {/* CRT Monitor Component: "Hello human!" */}
-        <div className="retro-window" style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="retro-titlebar">
-            <span>CRT Monitor • System Output</span>
-            <div className="retro-controls">
-              <span className="retro-win-box">_</span>
-              <span className="retro-win-box">▢</span>
-              <span className="retro-win-box">✕</span>
-            </div>
+      {/* Search & Filter Top Window */}
+      <div className="retro-window">
+        <div className="retro-titlebar retro-titlebar-pink">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Compass size={16} />
+            <span>Framework & Language Curriculum Directory</span>
           </div>
+          <div className="retro-controls">
+            <span className="retro-win-box">_</span>
+            <span className="retro-win-box">▢</span>
+            <span className="retro-win-box">✕</span>
+          </div>
+        </div>
+
+        <div style={{ padding: '16px 20px', background: '#ffffff', display: 'flex', flexDirection: 'column', gap: '14px' }}>
           
-          <div style={{ padding: '24px', background: '#f8fafc', display: 'flex', alignItems: 'center', gap: '20px', flex: 1 }}>
-            {/* CRT Monitor Illustration Frame */}
-            <div style={{
-              width: '130px',
-              height: '110px',
-              background: '#7c8cc6',
-              border: '2px solid #222638',
-              borderRadius: '8px',
-              padding: '8px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              boxShadow: '3px 3px 0px #222638'
-            }}>
-              <div className="aura-gradient-box" style={{
-                width: '100%',
-                height: '75px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                padding: '6px',
-                fontWeight: 'bold',
-                fontSize: '0.85rem',
-                color: '#ffffff',
-                textShadow: '1px 1px 2px rgba(0,0,0,0.4)'
-              }}>
-                Hello human!
-              </div>
-              <div style={{ width: '30px', height: '4px', background: '#222638', marginTop: '6px', borderRadius: '2px' }} />
+          {/* Search Bar */}
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <div style={{ position: 'relative', flex: 1 }}>
+              <Search size={16} color="#7c8cc6" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+              <input
+                type="text"
+                placeholder="Search frameworks & libraries (e.g. Next.js, FastAPI, Pandas, PyTorch, Express, Tailwind, Vue)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px 14px 10px 38px',
+                  border: '2px solid #222638',
+                  borderRadius: '4px',
+                  fontSize: '0.9rem',
+                  fontFamily: 'var(--font-retro)',
+                  boxShadow: 'inset 2px 2px 0px #eef3fc'
+                }}
+              />
             </div>
-
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#222638', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                Welcome to CS Desktop <span className="sparkle-star">✦</span>
-              </div>
-              <p style={{ fontSize: '0.85rem', color: '#4b5563', lineHeight: 1.4, marginBottom: '12px' }}>
-                Select a programming language filter or quest folder below to master Rust, Python, SQL, Java, C++, C#, and C!
-              </p>
-              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                <span className="retro-pill-btn retro-pill-btn-blue" style={{ fontSize: '0.72rem' }}>
-                  <Smile size={12} /> Positive vibes!
-                </span>
-                <span className="retro-pill-btn" style={{ fontSize: '0.72rem' }}>
-                  Level {level} Engineer
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Note Dialog Box: "Don't forget to take a nap!" */}
-        <div className="retro-window" style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="retro-titlebar retro-titlebar-pink">
-            <span>Note</span>
-            <div className="retro-controls">
-              <span className="retro-win-box">_</span>
-              <span className="retro-win-box">▢</span>
-              <span className="retro-win-box">✕</span>
-            </div>
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="retro-btn">
+                Clear
+              </button>
+            )}
           </div>
 
-          <div style={{ padding: '20px', background: '#ffffff', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#222638', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                Today is a great day! <span className="sparkle-star">✨</span>
+          {/* Search Results Dropdown */}
+          {searchQuery && (
+            <div style={{ background: '#f8fafc', padding: '12px', border: '2px solid #222638', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '240px', overflowY: 'auto' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 'bold', color: '#7c8cc6' }}>
+                SEARCH RESULTS ({searchResults.length} matches found):
               </div>
-              <p style={{ fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.5 }}>
-                "Don't forget to take a nap, drink water, and write clean algorithm test harnesses!"
-              </p>
+              {searchResults.length > 0 ? (
+                searchResults.map(({ lesson, course }) => (
+                  <div
+                    key={lesson.id}
+                    onClick={() => onSelectQuest(lesson.id)}
+                    style={{
+                      padding: '8px 12px',
+                      background: '#ffffff',
+                      border: '1.5px solid #222638',
+                      borderRadius: '4px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <div>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#ff69b4', marginRight: '8px' }}>
+                        [{course.title}]
+                      </span>
+                      <strong style={{ fontSize: '0.85rem', color: '#222638' }}>{lesson.title}</strong>
+                    </div>
+                    <button className="retro-btn retro-btn-blue" style={{ padding: '2px 8px', fontSize: '0.72rem' }}>
+                      Launch
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <p style={{ fontSize: '0.85rem', color: '#6b7280' }}>No matching lessons found for "{searchQuery}".</p>
+              )}
             </div>
+          )}
 
-            {/* Dialog buttons: [ thanks ] [ later ] */}
-            <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
-              <button className="retro-btn retro-btn-pink">thanks</button>
-              <button className="retro-btn">later</button>
+          {/* Category Domains Bar */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#7c8cc6', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Layers size={14} /> FILTER BY DOMAIN:
             </div>
-          </div>
-        </div>
-
-        {/* Earned Badges Inventory Window */}
-        <div className="retro-window" style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="retro-titlebar retro-titlebar-yellow">
-            <span>Memories • Badges Inventory ({unlockedBadges.length})</span>
-            <div className="retro-controls">
-              <span className="retro-win-box">_</span>
-              <span className="retro-win-box">▢</span>
-              <span className="retro-win-box">✕</span>
-            </div>
-          </div>
-
-          <div style={{ padding: '16px', background: '#ffffff', flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#222638', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Award size={16} color="#f7a3c3" /> UNLOCKED DESKTOP BADGES
-            </div>
-
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', flex: 1, alignContent: 'flex-start' }}>
-              {unlockedBadges.map((b) => (
-                <div 
-                  key={b.id} 
-                  title={`${b.title}: ${b.desc}`} 
-                  style={{
-                    padding: '8px 12px',
-                    background: '#eef3fc',
-                    border: '2px solid #222638',
-                    borderRadius: '4px',
-                    boxShadow: '2px 2px 0px #222638',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '0.82rem',
-                    fontWeight: 'bold'
-                  }}
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              {DOMAINS.map((domain) => (
+                <button
+                  key={domain}
+                  onClick={() => setSelectedDomain(domain)}
+                  className={`retro-btn ${selectedDomain === domain ? 'retro-btn-pink' : ''}`}
+                  style={{ padding: '4px 10px', fontSize: '0.75rem' }}
                 >
-                  <span>{b.icon}</span>
-                  <span>{b.title}</span>
-                </div>
+                  {domain}
+                </button>
               ))}
             </div>
           </div>
-        </div>
 
-      </div>
-
-      {/* Language Selection Filter Bar (Y2K Desktop Control Box) */}
-      <div className="retro-window" style={{ padding: '14px 18px', background: '#ffffff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', fontSize: '0.88rem', fontWeight: 'bold', color: '#222638' }}>
-          <Code size={18} color="#7c8cc6" />
-          <span>FILTER COURSES BY LANGUAGE:</span>
-        </div>
-
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {LANGUAGES.map((lang) => {
-            const isSelected = selectedLanguage === lang.id;
-            return (
+          {/* Languages & Frameworks Filter Pills */}
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            {LANGUAGES.map((lang) => (
               <button
                 key={lang.id}
                 onClick={() => setSelectedLanguage(lang.id)}
-                className={`retro-btn ${isSelected ? 'retro-btn-pink' : ''}`}
-                style={{
-                  padding: '6px 14px',
-                  fontSize: '0.8rem',
-                  borderColor: isSelected ? '#222638' : '#222638'
-                }}
+                className={`retro-btn ${selectedLanguage === lang.id ? 'retro-btn-blue' : ''}`}
+                style={{ padding: '3px 8px', fontSize: '0.72rem' }}
               >
-                <span>{lang.icon}</span>
-                <span>{lang.name}</span>
+                <span>{lang.icon}</span> <span>{lang.name}</span>
               </button>
-            );
-          })}
+            ))}
+          </div>
+
         </div>
       </div>
 
-      {/* Track Windows Grid */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {filteredTracks.map((track, trackIdx) => {
-          const trackCompletedCount = track.quests.filter(q => completedQuests.includes(q.id)).length;
+      {/* User Overview Telemetry Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+        <div className="retro-window" style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="retro-titlebar">
+            <span>Engineer Telemetry</span>
+            <div className="retro-controls">
+              <span className="retro-win-box">_</span>
+              <span className="retro-win-box">▢</span>
+              <span className="retro-win-box">✕</span>
+            </div>
+          </div>
           
-          // Alternate titlebar colors like in the reference images: blue, pink, yellow
-          const titlebarClass = trackIdx % 3 === 1 ? 'retro-titlebar-pink' : trackIdx % 3 === 2 ? 'retro-titlebar-yellow' : '';
+          <div style={{ padding: '16px 20px', background: '#ffffff', display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
+            <div className="aura-gradient-box" style={{
+              width: '56px',
+              height: '56px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.8rem',
+              flexShrink: 0
+            }}>
+              👨‍💻
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: '1rem', fontWeight: 'bold', color: '#222638' }}>
+                Level {level} Engineer
+              </div>
+              <p style={{ fontSize: '0.82rem', color: '#4b5563', marginBottom: '6px' }}>
+                Total XP: <strong>{xp}</strong> | Streak: <strong>{streak} Days</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Badges Inventory */}
+        <div className="retro-window" style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="retro-titlebar retro-titlebar-yellow">
+            <span>Unlocked Badges ({unlockedBadges.length})</span>
+            <div className="retro-controls">
+              <span className="retro-win-box">_</span>
+              <span className="retro-win-box">▢</span>
+              <span className="retro-win-box">✕</span>
+            </div>
+          </div>
+
+          <div style={{ padding: '12px 16px', background: '#ffffff', flex: 1, display: 'flex', gap: '8px', flexWrap: 'wrap', alignContent: 'center' }}>
+            {unlockedBadges.map((b) => (
+              <div 
+                key={b.id} 
+                title={`${b.title}: ${b.desc}`} 
+                style={{
+                  padding: '4px 10px',
+                  background: '#eef3fc',
+                  border: '1.5px solid #222638',
+                  borderRadius: '4px',
+                  boxShadow: '1.5px 1.5px 0px #222638',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '0.78rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                <span>{b.icon}</span>
+                <span>{b.title}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Framework & Library Courses Catalog Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '20px' }}>
+        {filteredCourses.map((course, idx) => {
+          const allCourseLessons = course.chapters.flatMap(c => c.lessons);
+          const completedCount = allCourseLessons.filter(l => completedQuests.includes(l.id)).length;
+          const percent = Math.round((completedCount / allCourseLessons.length) * 100) || 0;
 
           return (
-            <div key={track.id} className="retro-window">
-              
-              {/* Window Titlebar */}
-              <div className={`retro-titlebar ${titlebarClass}`}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div key={course.id} className="retro-window" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className={`retro-titlebar ${idx % 3 === 1 ? 'retro-titlebar-pink' : idx % 3 === 2 ? 'retro-titlebar-yellow' : ''}`}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Folder size={16} />
-                  <span>Folder: {track.title}</span>
+                  <span>{course.title}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <span style={{ fontSize: '0.78rem', fontWeight: 'bold' }}>
-                    {trackCompletedCount} / {track.quests.length} Completed
-                  </span>
-                  <div className="retro-controls">
-                    <span className="retro-win-box">_</span>
-                    <span className="retro-win-box">▢</span>
-                    <span className="retro-win-box">✕</span>
+                <div className="retro-controls">
+                  <span className="retro-win-box">_</span>
+                  <span className="retro-win-box">▢</span>
+                  <span className="retro-win-box">✕</span>
+                </div>
+              </div>
+
+              <div style={{ padding: '20px', background: '#ffffff', flex: 1, display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                  {course.mascotImg && (
+                    <img
+                      src={course.mascotImg}
+                      alt={course.title}
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '4px',
+                        border: '2px solid #222638',
+                        objectFit: 'contain',
+                        mixBlendMode: 'multiply',
+                        flexShrink: 0
+                      }}
+                    />
+                  )}
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span className="retro-pill-btn" style={{ fontSize: '0.72rem' }}>
+                        {course.icon} {course.language}
+                      </span>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#7c8cc6' }}>
+                        {course.domain}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Window Content */}
-              <div style={{ padding: '20px', background: '#ffffff' }}>
-                <p style={{ fontSize: '0.88rem', color: '#4b5563', marginBottom: '16px' }}>
-                  {track.description}
+                <p style={{ fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.5 }}>
+                  {course.description}
                 </p>
 
-                {/* Quest Cards Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(330px, 1fr))', gap: '16px' }}>
-                  {track.quests.map((quest, index) => {
-                    const isCompleted = completedQuests.includes(quest.id);
-                    const isActive = activeQuestId === quest.id;
+                {/* Progress bar */}
+                <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '4px', border: '1.5px solid #222638' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 'bold', color: '#222638', marginBottom: '4px' }}>
+                    <span>LESSON INFRASTRUCTURE</span>
+                    <span>{completedCount}/{allCourseLessons.length} Completed</span>
+                  </div>
+                  <div style={{ height: '10px', background: '#ffffff', border: '1.5px solid #222638', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${percent}%`, background: 'var(--titlebar-pink)', transition: 'width 0.3s ease' }} />
+                  </div>
+                </div>
 
-                    return (
-                      <div
-                        key={quest.id}
-                        onClick={() => onSelectQuest(quest.id)}
-                        className="retro-window retro-window-interactive"
-                        style={{
-                          padding: '16px',
-                          background: isActive ? '#eef3fc' : '#ffffff',
-                          borderColor: isActive ? '#7c8cc6' : isCompleted ? '#22c55e' : '#222638'
-                        }}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#7c8cc6' }}>
-                            QUEST #{index + 1} • {quest.xp} XP
-                          </span>
-                          {isCompleted ? (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#16a34a', fontSize: '0.75rem', fontWeight: 'bold' }}>
-                              <CheckCircle2 size={16} /> PASSED
-                            </span>
-                          ) : (
-                            <span style={{ fontSize: '0.72rem', color: '#6b7280', fontWeight: 'bold' }}>
-                              {quest.difficulty}
-                            </span>
-                          )}
-                        </div>
-
-                        <h4 style={{ fontSize: '0.95rem', color: '#222638', marginBottom: '6px' }}>
-                          {quest.title}
-                        </h4>
-
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px' }}>
-                          <span style={{ fontSize: '0.75rem', color: '#6b7280', fontFamily: 'var(--font-code)' }}>
-                            {quest.simulatorType}
-                          </span>
-                          <button className="retro-btn retro-btn-blue" style={{ padding: '4px 10px', fontSize: '0.75rem' }}>
-                            <Play size={12} /> Launch Quest
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
+                {/* Action button */}
+                <div style={{ marginTop: 'auto', display: 'flex', gap: '10px' }}>
+                  <button
+                    onClick={() => onSelectCourse(course.id)}
+                    className="retro-btn retro-btn-pink"
+                    style={{ flex: 1, padding: '8px', fontSize: '0.82rem' }}
+                  >
+                    <BookOpen size={14} /> Course Roadmap
+                  </button>
+                  <button
+                    onClick={() => onSelectQuest(allCourseLessons[0].id)}
+                    className="retro-btn retro-btn-blue"
+                    style={{ padding: '8px 14px', fontSize: '0.82rem' }}
+                  >
+                    <Play size={14} /> Launch
+                  </button>
                 </div>
 
               </div>
-
             </div>
           );
         })}

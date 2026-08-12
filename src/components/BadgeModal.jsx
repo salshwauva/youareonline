@@ -37,7 +37,7 @@ export default function BadgeModal({ badge, onClose }) {
         {/* Modal Window Header */}
         <div className="retro-titlebar retro-titlebar-pink">
           <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Award size={16} /> Dialog • New Badge Unlocked!
+            <Award size={16} /> New Badge Unlocked
           </span>
           <div className="retro-controls">
             <span className="retro-win-box" onClick={onClose}>✕</span>
@@ -58,11 +58,8 @@ export default function BadgeModal({ badge, onClose }) {
           </p>
 
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-            <button onClick={onClose} className="retro-btn retro-btn-pink" style={{ padding: '8px 20px', fontSize: '0.88rem' }}>
-              sure!
-            </button>
-            <button onClick={onClose} className="retro-btn" style={{ padding: '8px 20px', fontSize: '0.88rem' }}>
-              ok
+            <button onClick={onClose} className="retro-btn retro-btn-pink" style={{ padding: '8px 24px', fontSize: '0.88rem' }}>
+              Claim Badge
             </button>
           </div>
         </div>

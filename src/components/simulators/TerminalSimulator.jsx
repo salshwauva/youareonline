@@ -4,7 +4,7 @@ import { Terminal as TermIcon } from 'lucide-react';
 export default function TerminalSimulator() {
   const [inputVal, setInputVal] = useState('');
   const [history, setHistory] = useState([
-    { text: ':: Y2K DESKTOP UNIX SHELL v2.4 (x86_64-pc-linux-gnu)', type: 'system' },
+    { text: ':: UNIX SHELL v2.4 (x86_64-pc-linux-gnu)', type: 'system' },
     { text: 'Type "help" for available commands.', type: 'system' }
   ]);
   const [currentDir, setCurrentDir] = useState('~/project');
@@ -61,9 +61,9 @@ export default function TerminalSimulator() {
         break;
       case 'cat':
         if (args[1] === 'README.md') {
-          newHistory.push({ text: '# You Are Online\nWelcome to your Y2K Desktop CS learning environment!', type: 'output' });
+          newHistory.push({ text: '# You Are Online\nWelcome to your CS learning environment!', type: 'output' });
         } else if (args[1] === 'main.rs') {
-          newHistory.push({ text: 'fn main() {\n    println!("Hello human!");\n}', type: 'output' });
+          newHistory.push({ text: 'fn main() {\n    println!("Hello, World!");\n}', type: 'output' });
         } else {
           newHistory.push({ text: `cat: ${args[1] || ''}: No such file or directory`, type: 'error' });
         }
