@@ -1,82 +1,73 @@
-# 🌸 YOU ARE ONLINE 💕
+# You Are Online
 
-> A curated, light-mode, anime-inspired gamified CS and programming platform inspired by **codedex.io**.
+You Are Online is a browser based coding course platform for a learner who wants short, checkable exercises. Courses cover a language or framework in chapters and lessons. A lesson pays XP, XP builds a level, and badges mark milestones. Everything runs client side and saves to `localStorage`. There is no server and no account.
 
-![You Are Online Header](https://img.shields.io/badge/YOU_ARE-ONLINE-ff69b4?style=for-the-badge&logo=react&logoColor=white)
-![Build Status](https://img.shields.io/badge/Build-Passing-10b981?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-c084fc?style=for-the-badge)
+## Features
 
----
+- Twenty courses under `src/data/courses/`: eleven core languages and tools (JavaScript, Python, HTML and CSS, Rust, SQL, C++, command line and Git, React, APIs, the Model Context Protocol, networking) and nine frameworks (Next.js, Vue, Svelte, Express, FastAPI, Pandas, Tailwind, TypeScript, PyTorch).
+- Three roadmaps in `src/data/roadmapsData.js` string lessons from several courses into a milestone path, each ending in a badge: full stack web, data and AI, and systems.
+- Five lesson types, each with its own runner: code editing, an HTML and CSS live preview, a quiz, fill in the blank, and a simulator tab paired with a code lesson.
+- Six simulators: a Rust memory visualizer, an algorithmic test bench, a SQL playground, a fake terminal, a CPU thread and mutex demo, and a synthetic data generator.
+- A lesson author studio in the app that builds the JSON for a new lesson from a form, so a lesson can be drafted without opening the course files.
+- XP, levels, and a badge shelf, all held in `GameContext` and written to `localStorage` on every change.
 
-## 🌟 Overview
+## Tech stack
 
-**You Are Online** is an interactive, 8-bit retro-styled coding platform featuring automated synthetic data generators, interactive memory sandboxes, LeetCode-style algorithmic test benches, in-browser SQLite database engines, CLI shell emulators, multi-core CPU concurrency simulators, and Web Audio API synthesized sound effects.
+React 18 with Vite 6. Runtime dependencies: `react`, `react-dom`, `lucide-react` for icons, and `canvas-confetti` for badge celebrations. No backend, no database, no editor library beyond the built in `CodeEditor` component.
 
----
+## Prerequisites
 
-## 🌸 Curriculum Tracks & Quests
+Node 18 or later, for the Vite 6 toolchain.
 
-| Category | Languages & Tools | Core Quests & Simulators |
-| :--- | :--- | :--- |
-| 🛡️ **Systems & Core** | Rust, C++, Java, C# | 🦀 Rust Ownership & Borrowing Sandbox (`&T` vs `&mut T`), C++ Pointers & Smart Pointers (`std::unique_ptr`), Java JVM Memory & GC |
-| 📊 **Data & Algorithms** | Python, SQL, NumPy, Pandas | 🚀 Algorithmic Test Bench (N=10,000 empirical Big-O time curves), Valid Parentheses Stack, Synthetic EDA |
-| 🏗️ **Software Architecture** | JavaScript, TypeScript, Node.js | 🏛️ SOLID Principles Refactoring, LRU Cache O(1) Design Challenge, Design Patterns |
-| ⚡ **Under-the-Hood** | Command Line, Git, OS Architecture | 🖥️ Unix CLI Shell Simulator, Git DAG & Branching, OS Multi-Threaded CPU Concurrency & Mutex Locks |
-| 🎨 **Web Dev & UI/UX** | HTML, CSS, React | 🖼️ Pixel-Perfect CSS Grid & Flexbox, Browser Event Loop & Microtask Queue |
-
----
-
-## ✨ Features
-
-- 🌸 **Cute Light Mode Anime Aesthetic**: Soft sakura pinks (`#fff5f8`), hot pink accents (`#ff69b4`), soft lavender, and retro pixel typography (*Silkscreen*, *Press Start 2P*, *Fira Code*).
-- 🔊 **Synthesized 8-Bit Web Audio**: Pure Web Audio API retro sound generator for navigation blips, quest completion fanfares, level-ups, and badge unlock tunes.
-- 🧪 **Interactive Simulators**:
-  - **Rust Memory Visualizer**: Real-time stack vs heap allocation diagrams and borrow checker rule telemetry.
-  - **Algorithmic Test Bench**: Evaluates user code against random edge cases and plots SVG time curves.
-  - **In-Browser SQLite Engine**: Pre-seeded with synthetic e-commerce tables (`users`, `orders`, `products`).
-  - **Kawaii Terminal Shell**: Interactive ZSH shell supporting `ls`, `cd`, `cat`, `mkdir`, `git init`, `git status`, `git commit`.
-  - **CPU Threads Simulator**: Multi-core CPU scheduler with mutex lock contention and deadlock detection.
-  - **Synthetic Data Generator**: Real-time customizable JSON & CSV mock dataset generator with copy and download options.
-- 🎮 **RPG Progress System**: XP counters, level progression (`Math.floor(XP / 100) + 1`), daily streak flame, unlocked badges inventory, and `localStorage` persistence.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js**: v18.0.0 or higher
-- **npm**: v9.0.0 or higher
-
-### Installation
+## Quick start
 
 ```bash
-# Clone the repository
 git clone https://github.com/salshwauva/youareonline.git
-
-# Navigate into project directory
 cd youareonline
-
-# Install dependencies
 npm install
-
-# Start local development server
 npm run dev
 ```
 
-The application will be live at `http://127.0.0.1:3000/`.
+The dev server binds to `http://127.0.0.1:3000/`.
 
----
+## Usage
 
-## 🛠️ Tech Stack
+Pick a course from the catalog, open a lesson, and work the editor, quiz, or fill in the blank panel on the left. A passing lesson pays XP and, on some lessons, a badge. `npm run build` writes a production bundle to `dist/`. `npm run preview` serves that bundle locally.
 
-- **Frontend**: React 18, Vite 6, Vanilla CSS (Design Tokens & Pixel Utilities)
-- **Icons & Animation**: Lucide React, Canvas Confetti
-- **Sound**: Web Audio API Synthesizer
-- **Build Tooling**: Vite, ESBuild
+## How it works
 
----
+A lesson is a plain object with a type. `src/components/LessonView.jsx` reads the type and picks the runner:
 
-## 📄 License
+| Type | What the learner does | How it is checked |
+| --- | --- | --- |
+| `code` | Edits code in the editor | Each test case runs a predicate or a regular expression against the source text |
+| `web-preview` | Edits HTML and CSS | The page renders in a sandboxed iframe with its console captured |
+| `quiz` | Picks one option | Index compare |
+| `fill-blank` | Types the missing tokens | Trimmed string compare per blank |
+| `simulator` | Uses the editor plus a second tab holding one of the six simulators | Same as `code` |
 
-Distributed under the MIT License.
+The code runner does not execute the learner's code. `src/utils/evaluator.js` pattern matches the source against each test case and prints a fixed log that looks like a run. A lesson that needs a real check states it as a predicate in `testCases`. `docs/buildout-plan.md` records the lesson schema and the content gaps.
+
+`src/context/GameContext.jsx` holds XP, completed lessons, and unlocked badges. Level is `floor(xp / 100) + 1`. A level up, a completed lesson, and a new badge each play a short tune from `src/utils/sound.js`, which synthesizes every sound with the Web Audio API; there are no audio files.
+
+### Project structure
+
+| Path | Purpose |
+| --- | --- |
+| `src/data/courses/` | One file per core course; the nine framework courses generate from `createFrameworkCourse` in `src/utils/lessonFactory.js` |
+| `src/data/courseRegistry.js` | Course list and the domain filter for the catalog |
+| `src/data/roadmapsData.js` | The three roadmaps and their milestones |
+| `src/components/` | Navbar, catalog, course map, lesson view, badge modal, author studio |
+| `src/components/simulators/` | The six simulators |
+| `src/components/evaluators/` | Quiz, fill in the blank, and web preview runners |
+| `src/context/GameContext.jsx` | XP, badges, and `localStorage` persistence |
+| `src/utils/` | Evaluator, lesson factory, sound synthesizer |
+| `docs/buildout-plan.md` | Plan for the Rust, Python, Java, C, and C++ course content |
+
+## Status and limits
+
+- About 60 lessons exist across the 20 courses. The eleven core courses hold a chapter or two each; the nine framework courses generate two chapters of two lessons each from a shared template, so their content is thin and repeats the same pattern per framework.
+- Code checks are text matching against the source, so a wrong solution that contains the right tokens passes.
+- The SQL playground and the fake terminal recognize a small fixed set of commands; a query or command outside that set returns nothing useful.
+- The streak shown in the navbar is a fixed number and does not track days.
+- There are no automated tests. The `lint` script names ESLint, but ESLint is not installed, so `npm run lint` fails until it is added.
